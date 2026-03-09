@@ -35,12 +35,31 @@ function getNextThursday(fromDate) {
   return d;
 }
 
-function getEventDate() {
-  const now = new Date();
+function getDateFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  const dateStr = params.get("date");
+  if (dateStr && /^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+    const d = new Date(dateStr + "T00:00:00");
+    if (!isNaN(d.getTime())) return d;
+  }
+  return null;
+}
 
+function setDateInURL(date) {
+  const url = new URL(window.location);
+  url.searchParams.set("date", toDateString(date));
+  history.replaceState(null, "", url);
+}
+
+function getEventDate() {
+  // Priority 1: URL parameter ?date=YYYY-MM-DD
+  const urlDate = getDateFromURL();
+  if (urlDate) return urlDate;
+
+  // Priority 2: Static config
+  const now = new Date();
   if (CONFIG.EVENT_DATE) {
     const configured = new Date(CONFIG.EVENT_DATE + "T00:00:00");
-    // Si la date configuree est passee (lendemain), on propose le prochain jeudi
     const endOfEvent = new Date(configured);
     endOfEvent.setHours(24, 0, 0, 0);
     if (now > endOfEvent) {
@@ -49,10 +68,9 @@ function getEventDate() {
     return configured;
   }
 
-  // Pas de date configuree : prochain jeudi
+  // Priority 3: Next Thursday
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   if (today.getDay() === 4) {
-    // On est jeudi : si avant minuit, c'est aujourd'hui
     return today;
   }
   return getNextThursday(now);
@@ -330,6 +348,7 @@ function setupDateUI(eventDate) {
       const newDate = new Date(picker.value + "T00:00:00");
       picker.style.display = "none";
       display.textContent = formatDateFr(newDate);
+      setDateInURL(newDate);
       loadWeatherAndDecide(newDate);
     }
   });
@@ -386,6 +405,7 @@ async function init() {
   }
 
   const eventDate = getEventDate();
+  setDateInURL(eventDate);
   setupDateUI(eventDate);
   loadWeatherAndDecide(eventDate);
 
