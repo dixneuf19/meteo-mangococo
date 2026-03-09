@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MangoCoco - Soirée Quai</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥥</text></svg>">
+</head>
+
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header__mascots">
+      <img src="mango.png" alt="Mango mascotte" class="header__mascot header__mascot--mango">
+      <div class="header__text">
+        <h1 class="header__title">MangoCoco</h1>
+        <p class="header__subtitle">Soirée Quai Fanfare Vin Chaud<br>sur les Quais Tino Rossi</p>
+      </div>
+      <img src="coco.png" alt="Coco mascotte" class="header__mascot header__mascot--coco">
+    </div>
+  </header>
+
+  <!-- Date de l'événement -->
+  <section class="event-date" id="event-date-section">
+    <p class="event-date__label">Prochaine soirée :</p>
+    <p class="event-date__value" id="event-date-display">Chargement...</p>
+    <button class="event-date__change" id="event-date-change" title="Changer la date" style="display:none;">
+      Choisir une autre date
+    </button>
+    <input type="date" id="event-date-picker" class="event-date__picker" style="display:none;">
+  </section>
+
+  <!-- Bandeau de statut géant -->
+  <section class="status-banner" id="status-banner">
+    <div class="status-banner__icon" id="status-icon">⏳</div>
+    <div class="status-banner__text" id="status-text">Chargement des données météo...</div>
+    <div class="status-banner__detail" id="status-detail"></div>
+  </section>
+
+  <!-- Infos météo -->
+  <section class="weather-section" id="weather-section">
+    <h2 class="section-title">Prévisions pour le créneau 20h – 00h</h2>
+    <div class="weather-grid" id="weather-grid"></div>
+    <p class="weather-source">
+      Données météo : <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo.com</a>
+      — Lieu : Quais Tino Rossi, Paris 5e
+    </p>
+  </section>
+
+  <!-- Diagramme de décision (Mermaid) -->
+  <section class="protocol-section">
+    <h2 class="section-title">Protocole de décision</h2>
+    <div class="mermaid-container">
+      <pre class="mermaid" id="flowchart-mermaid">
+flowchart TD
+    Start["Consulter les previsions
+    pour la soiree"]
+    RainCheck{"Pluie annoncee
+    dans les previsions ?"}
+    ConfirmedDirect["MAINTENUE
+    C'est la fete !"]
+    Timeline{"Avant la veille
+    a 20h ?"}
+    Wait1["EN ATTENTE
+    Decision veille a 20h"]
+    Check70{"Veille 20h :
+    Precip. journee > 70% ?"}
+    Cancel1["ANNULEE"]
+    BeforeJ{"Avant jour J 17h ?"}
+    Wait2["EN ATTENTE
+    Confirmation a 17h"]
+    Check20{"Jour J 17h :
+    Precip. 20h-00h > 20% ?"}
+    Cancel2["ANNULEE"]
+    ConfirmedFinal["MAINTENUE"]
+
+    Start --> RainCheck
+    RainCheck -->|"Beau temps"| ConfirmedDirect
+    RainCheck -->|"Risque pluie"| Timeline
+    Timeline -->|Oui| Wait1
+    Timeline -->|Non| Check70
+    Check70 -->|"> 70%"| Cancel1
+    Check70 -->|"OK"| BeforeJ
+    BeforeJ -->|Oui| Wait2
+    BeforeJ -->|Non| Check20
+    Check20 -->|"> 20%"| Cancel2
+    Check20 -->|"OK"| ConfirmedFinal
+
+    classDef confirmed fill:#4CAF50,stroke:#2E7D32,color:#fff,font-weight:bold,stroke-width:3px
+    classDef cancelled fill:#E53935,stroke:#B71C1C,color:#fff,font-weight:bold,stroke-width:3px
+    classDef waiting fill:#FF9800,stroke:#E65100,color:#fff,font-weight:bold,stroke-width:3px
+    classDef decision fill:#FFFDE7,stroke:#2D3436,color:#2D3436,stroke-width:2px
+    classDef startNode fill:#FFF9C4,stroke:#F9A825,color:#2D3436,stroke-width:3px
+
+    class Start startNode
+    class RainCheck,Timeline,Check70,BeforeJ,Check20 decision
+    class ConfirmedDirect,ConfirmedFinal confirmed
+    class Cancel1,Cancel2 cancelled
+    class Wait1,Wait2 waiting
+      </pre>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer__content">
+      <img src="mango.png" alt="" class="footer__mascot">
+      <div>
+        <p class="footer__title">MangoCoco</p>
+        <p class="footer__tagline">Fanfare tropicale et explosive</p>
+        <p class="footer__refresh">Dernière mise à jour : <span id="last-refresh">—</span></p>
+      </div>
+      <img src="coco.png" alt="" class="footer__mascot">
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: "base",
+      themeVariables: {
+        fontFamily: '"Patrick Hand", cursive',
+        fontSize: "16px",
+        primaryColor: "#FFFDE7",
+        primaryBorderColor: "#2D3436",
+        lineColor: "#2D3436",
+        secondaryColor: "#FFFDE7",
+        tertiaryColor: "#FFFDE7",
+      },
+      flowchart: {
+        nodeSpacing: 30,
+        rankSpacing: 40,
+        useMaxWidth: false,
+      },
+    });
+  </script>
+  <script src="app.js"></script>
+</body>
+
+</html>

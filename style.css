@@ -1,0 +1,398 @@
+/* ============================================
+   MangoCoco - Style crayon / cartoon
+   Effet "dessine a la main" pour coller
+   aux mascottes kawaii mango & coco
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
+
+:root {
+  --bg: #FFF9E6;
+  --bg-card: #FFFEF6;
+  --text: #2D3436;
+  --text-light: #636E72;
+  --mango: #F9A825;
+  --mango-light: #FDD835;
+  --coco-green: #66BB6A;
+  --coco-green-dark: #388E3C;
+  --orange-warm: #FF9800;
+  --red-cancel: #E53935;
+  --green-ok: #4CAF50;
+  --outline: #2D3436;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Patrick Hand", "Comic Sans MS", cursive;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  min-height: 100vh;
+  /* Subtle paper texture via CSS noise */
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+}
+
+/* ---- Sketch-style utility ---- */
+
+.sketch-box {
+  border: 3px solid var(--outline);
+  border-radius: 12px 8px 14px 6px;
+  box-shadow: 4px 4px 0 var(--outline);
+}
+
+/* ---- Header ---- */
+
+.header {
+  background: linear-gradient(160deg, var(--mango-light) 0%, var(--mango) 60%, var(--orange-warm) 100%);
+  color: var(--text);
+  text-align: center;
+  padding: 1rem 1rem 1.2rem;
+  border-bottom: 3px solid var(--outline);
+  position: relative;
+}
+
+.header__mascots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.header__mascot {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+  filter: drop-shadow(3px 3px 0 rgba(0,0,0,0.2));
+  flex-shrink: 0;
+  transition: transform 0.3s;
+}
+
+.header__mascot:hover {
+  transform: scale(1.1) rotate(0deg) !important;
+}
+
+.header__mascot--mango {
+  transform: rotate(-6deg);
+}
+
+.header__mascot--coco {
+  transform: rotate(6deg);
+}
+
+.header__text {
+  flex-shrink: 0;
+}
+
+.header__title {
+  font-size: 2.6rem;
+  font-weight: 400;
+  color: var(--outline);
+  text-shadow: 3px 3px 0 rgba(255, 255, 255, 0.4);
+  letter-spacing: 1px;
+}
+
+.header__subtitle {
+  font-size: 1.05rem;
+  color: var(--outline);
+  opacity: 0.75;
+  line-height: 1.25;
+}
+
+/* ---- Event Date ---- */
+
+.event-date {
+  text-align: center;
+  padding: 0.8rem 1rem;
+  background: var(--bg-card);
+  border-bottom: 3px solid var(--outline);
+}
+
+.event-date__label {
+  font-size: 0.95rem;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.event-date__value {
+  font-size: 1.5rem;
+  color: var(--orange-warm);
+  margin-top: 0.1rem;
+}
+
+.event-date__change {
+  margin-top: 0.4rem;
+  background: var(--bg);
+  border: 2px solid var(--outline);
+  color: var(--text);
+  padding: 0.25rem 0.8rem;
+  border-radius: 8px 5px 9px 4px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 var(--outline);
+  transition: all 0.15s;
+}
+
+.event-date__change:hover {
+  background: var(--mango-light);
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--outline);
+}
+
+.event-date__picker {
+  margin-top: 0.4rem;
+  padding: 0.25rem 0.5rem;
+  border: 2px solid var(--outline);
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: inherit;
+  color: var(--text);
+}
+
+/* ---- Status Banner ---- */
+
+.status-banner {
+  text-align: center;
+  padding: 1.3rem 1rem;
+  margin: 1rem;
+  border: 3px solid var(--outline);
+  border-radius: 14px 8px 12px 10px;
+  box-shadow: 5px 5px 0 var(--outline);
+  transition: background 0.3s;
+}
+
+.status-banner--loading {
+  background: #FFF9C4;
+}
+
+.status-banner--confirmed {
+  background: #C8E6C9;
+}
+
+.status-banner--cancelled {
+  background: #FFCDD2;
+}
+
+.status-banner--waiting {
+  background: #FFE0B2;
+}
+
+.status-banner--error {
+  background: #CFD8DC;
+}
+
+.status-banner__icon {
+  font-size: 3rem;
+  margin-bottom: 0.2rem;
+}
+
+.status-banner__text {
+  font-size: 2.2rem;
+}
+
+.status-banner__detail {
+  font-size: 1.05rem;
+  margin-top: 0.3rem;
+  opacity: 0.75;
+}
+
+/* ---- Weather Section ---- */
+
+.weather-section {
+  padding: 1.5rem 1rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 1.3rem;
+  color: var(--outline);
+  margin-bottom: 0.8rem;
+}
+
+.weather-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.weather-hour {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-card);
+  padding: 0.4rem 0.6rem;
+  border: 2px solid var(--outline);
+  border-radius: 10px 6px 8px 5px;
+  box-shadow: 3px 3px 0 var(--outline);
+}
+
+.weather-hour:nth-child(even) {
+  border-radius: 6px 10px 5px 9px;
+}
+
+.weather-hour__time {
+  font-size: 1.1rem;
+  min-width: 2.8rem;
+  color: var(--text);
+}
+
+.weather-hour__bar-container {
+  flex: 1;
+  height: 18px;
+  background: #FFF9C4;
+  border-radius: 9px;
+  overflow: hidden;
+  border: 2px solid var(--outline);
+}
+
+.weather-hour__bar {
+  height: 100%;
+  border-radius: 7px;
+  transition: width 0.6s ease;
+  min-width: 2px;
+}
+
+.weather-hour__bar--low {
+  background: var(--coco-green);
+}
+
+.weather-hour__bar--medium {
+  background: var(--orange-warm);
+}
+
+.weather-hour__bar--high {
+  background: var(--red-cancel);
+}
+
+.weather-hour__value {
+  font-size: 1.05rem;
+  min-width: 2.8rem;
+  text-align: right;
+}
+
+.weather-hour__temp {
+  font-size: 1rem;
+  color: var(--text-light);
+  min-width: 2.5rem;
+  text-align: right;
+}
+
+.weather-source {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-light);
+  margin-top: 1rem;
+}
+
+.weather-source a {
+  color: var(--orange-warm);
+}
+
+/* ---- Protocol / Mermaid Flowchart ---- */
+
+.protocol-section {
+  padding: 1.5rem 1rem 2rem;
+  margin: 0 auto;
+}
+
+.mermaid-container {
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0.5rem;
+}
+
+.mermaid-container svg {
+  height: auto;
+}
+
+/* ---- Footer ---- */
+
+.footer {
+  text-align: center;
+  padding: 1rem;
+  background: linear-gradient(160deg, var(--mango-light), var(--mango), var(--orange-warm));
+  border-top: 3px solid var(--outline);
+  color: var(--text);
+}
+
+.footer__content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.footer__mascot {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  opacity: 0.6;
+}
+
+.footer__title {
+  font-size: 1.15rem;
+}
+
+.footer__tagline {
+  font-size: 0.9rem;
+  opacity: 0.65;
+}
+
+.footer__refresh {
+  font-size: 0.8rem;
+  opacity: 0.5;
+}
+
+/* ---- Responsive ---- */
+
+@media (max-width: 500px) {
+  .header__title {
+    font-size: 2rem;
+  }
+
+  .header__mascot {
+    width: 64px;
+    height: 64px;
+  }
+
+  .status-banner__text {
+    font-size: 1.6rem;
+  }
+
+  .status-banner__icon {
+    font-size: 2.5rem;
+  }
+
+  .status-banner {
+    margin: 0.75rem 0.5rem;
+    padding: 1rem 0.75rem;
+    box-shadow: 3px 3px 0 var(--outline);
+  }
+
+  .weather-hour {
+    box-shadow: 2px 2px 0 var(--outline);
+  }
+
+  .weather-hour__temp {
+    display: none;
+  }
+
+  .footer__mascot {
+    width: 30px;
+    height: 30px;
+  }
+}
