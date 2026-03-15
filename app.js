@@ -272,7 +272,7 @@ function updateWeatherGrid(slots) {
   });
 }
 
-const MERMAID_NODE_MAP = {
+const FLOW_NODE_MAP = {
   "flow-confirmed-direct": "ConfirmedDirect",
   "flow-wait1": "Wait1",
   "flow-cancel1": "Cancel1",
@@ -281,31 +281,30 @@ const MERMAID_NODE_MAP = {
   "flow-confirmed-final": "ConfirmedFinal",
 };
 
+const FLOW_PATHS = {
+  "ConfirmedDirect": ["Start", "RainCheck", "ConfirmedDirect"],
+  "Wait1": ["Start", "RainCheck", "Timeline", "Wait1"],
+  "Cancel1": ["Start", "RainCheck", "Timeline", "Check70", "Cancel1"],
+  "Wait2": ["Start", "RainCheck", "Timeline", "Check70", "BeforeJ", "Wait2"],
+  "Cancel2": ["Start", "RainCheck", "Timeline", "Check70", "BeforeJ", "Check20", "Cancel2"],
+  "ConfirmedFinal": ["Start", "RainCheck", "Timeline", "Check70", "BeforeJ", "Check20", "ConfirmedFinal"],
+};
+
 function highlightFlowNode(activeNodeId) {
-  const mermaidNodeId = MERMAID_NODE_MAP[activeNodeId];
-  if (!mermaidNodeId) return;
+  const nodeId = FLOW_NODE_MAP[activeNodeId];
+  if (!nodeId) return;
 
-  const svg = document.querySelector(".mermaid-container svg");
-  if (!svg) return;
+  const path = FLOW_PATHS[nodeId] || [];
 
-  // Dim all nodes
-  svg.querySelectorAll(".node").forEach(node => {
-    node.style.opacity = "0.35";
-    node.style.transition = "opacity 0.3s";
-  });
-
-  // Highlight active node
-  const activeEl = svg.querySelector(`[id*="flowchart-"] [id*="${mermaidNodeId}"]`)
-    || svg.querySelector(`g.node#${mermaidNodeId}`)
-    || svg.querySelector(`[id$="${mermaidNodeId}"]`);
-
-  // Try a more robust selector: Mermaid uses node IDs like "flowchart-XYZ-123"
-  const allNodes = svg.querySelectorAll(".node");
-  allNodes.forEach(node => {
-    const nodeId = node.id || "";
-    if (nodeId.includes(mermaidNodeId)) {
-      node.style.opacity = "1";
-      node.style.filter = "drop-shadow(0 0 8px rgba(255, 140, 66, 0.7))";
+  document.querySelectorAll(".flow-node").forEach(node => {
+    const id = node.dataset.node;
+    node.classList.remove("flow-node--active", "flow-node--dimmed", "flow-node--on-path");
+    if (id === nodeId) {
+      node.classList.add("flow-node--active");
+    } else if (path.includes(id)) {
+      node.classList.add("flow-node--on-path");
+    } else {
+      node.classList.add("flow-node--dimmed");
     }
   });
 }
@@ -370,13 +369,9 @@ async function loadWeatherAndDecide(eventDate) {
   });
 
   // Reset flowchart highlights
-  const svg = document.querySelector(".mermaid-container svg");
-  if (svg) {
-    svg.querySelectorAll(".node").forEach(n => {
-      n.style.opacity = "";
-      n.style.filter = "";
-    });
-  }
+  document.querySelectorAll(".flow-node").forEach(n => {
+    n.classList.remove("flow-node--active", "flow-node--dimmed", "flow-node--on-path");
+  });
 
   try {
     const data = await fetchWeather(eventDate);
@@ -399,11 +394,6 @@ async function loadWeatherAndDecide(eventDate) {
 }
 
 async function init() {
-  // Render Mermaid flowchart
-  if (window.mermaid) {
-    await mermaid.run();
-  }
-
   const eventDate = getEventDate();
   setDateInURL(eventDate);
   setupDateUI(eventDate);

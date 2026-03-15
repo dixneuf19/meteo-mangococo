@@ -53,57 +53,65 @@
     </p>
   </section>
 
-  <!-- Diagramme de décision (Mermaid) -->
+  <!-- Diagramme de décision -->
   <section class="protocol-section">
     <h2 class="section-title">Protocole de décision</h2>
-    <div class="mermaid-container">
-      <pre class="mermaid" id="flowchart-mermaid">
-flowchart TD
-    Start["Consulter les previsions
-    pour la soiree"]
-    RainCheck{"Pluie annoncee
-    dans les previsions ?"}
-    ConfirmedDirect["MAINTENUE
-    C'est la fete !"]
-    Timeline{"Avant la veille
-    a 20h ?"}
-    Wait1["EN ATTENTE
-    Decision veille a 20h"]
-    Check70{"Veille 20h :
-    Precip. journee > 70% ?"}
-    Cancel1["ANNULEE"]
-    BeforeJ{"Avant jour J 17h ?"}
-    Wait2["EN ATTENTE
-    Confirmation a 17h"]
-    Check20{"Jour J 17h :
-    Precip. 20h-00h > 20% ?"}
-    Cancel2["ANNULEE"]
-    ConfirmedFinal["MAINTENUE"]
+    <div class="flowchart" id="flowchart">
 
-    Start --> RainCheck
-    RainCheck -->|"Beau temps"| ConfirmedDirect
-    RainCheck -->|"Risque pluie"| Timeline
-    Timeline -->|Oui| Wait1
-    Timeline -->|Non| Check70
-    Check70 -->|"> 70%"| Cancel1
-    Check70 -->|"OK"| BeforeJ
-    BeforeJ -->|Oui| Wait2
-    BeforeJ -->|Non| Check20
-    Check20 -->|"> 20%"| Cancel2
-    Check20 -->|"OK"| ConfirmedFinal
+      <div class="flow-step">
+        <div class="flow-node flow-node--start" data-node="Start">Prévisions soirée</div>
+      </div>
+      <div class="flow-vline"></div>
 
-    classDef confirmed fill:#4CAF50,stroke:#2E7D32,color:#fff,font-weight:bold,stroke-width:3px
-    classDef cancelled fill:#E53935,stroke:#B71C1C,color:#fff,font-weight:bold,stroke-width:3px
-    classDef waiting fill:#FF9800,stroke:#E65100,color:#fff,font-weight:bold,stroke-width:3px
-    classDef decision fill:#FFFDE7,stroke:#2D3436,color:#2D3436,stroke-width:2px
-    classDef startNode fill:#FFF9C4,stroke:#F9A825,color:#2D3436,stroke-width:3px
+      <div class="flow-step">
+        <div class="flow-node flow-node--decision" data-node="RainCheck">Pluie annoncée ?</div>
+        <div class="flow-branch">
+          <div class="flow-arrow-h"><span class="flow-label">Beau temps</span></div>
+          <div class="flow-node flow-node--confirmed" data-node="ConfirmedDirect">MAINTENUE !</div>
+        </div>
+      </div>
+      <div class="flow-vline"><span class="flow-label">Risque pluie</span></div>
 
-    class Start startNode
-    class RainCheck,Timeline,Check70,BeforeJ,Check20 decision
-    class ConfirmedDirect,ConfirmedFinal confirmed
-    class Cancel1,Cancel2 cancelled
-    class Wait1,Wait2 waiting
-      </pre>
+      <div class="flow-step">
+        <div class="flow-node flow-node--decision" data-node="Timeline">Avant veille 20h ?</div>
+        <div class="flow-branch">
+          <div class="flow-arrow-h"><span class="flow-label">Oui</span></div>
+          <div class="flow-node flow-node--waiting" data-node="Wait1">EN ATTENTE<br>Veille 20h</div>
+        </div>
+      </div>
+      <div class="flow-vline"><span class="flow-label">Non</span></div>
+
+      <div class="flow-step">
+        <div class="flow-node flow-node--decision" data-node="Check70">Précip. journée<br>&gt; 70% ?</div>
+        <div class="flow-branch">
+          <div class="flow-arrow-h"><span class="flow-label">&gt; 70%</span></div>
+          <div class="flow-node flow-node--cancelled" data-node="Cancel1">ANNULÉE</div>
+        </div>
+      </div>
+      <div class="flow-vline"><span class="flow-label">OK</span></div>
+
+      <div class="flow-step">
+        <div class="flow-node flow-node--decision" data-node="BeforeJ">Avant J 17h ?</div>
+        <div class="flow-branch">
+          <div class="flow-arrow-h"><span class="flow-label">Oui</span></div>
+          <div class="flow-node flow-node--waiting" data-node="Wait2">EN ATTENTE<br>Jour J 17h</div>
+        </div>
+      </div>
+      <div class="flow-vline"><span class="flow-label">Non</span></div>
+
+      <div class="flow-step">
+        <div class="flow-node flow-node--decision" data-node="Check20">Précip. 20h-00h<br>&gt; 20% ?</div>
+        <div class="flow-branch">
+          <div class="flow-arrow-h"><span class="flow-label">&gt; 20%</span></div>
+          <div class="flow-node flow-node--cancelled" data-node="Cancel2">ANNULÉE</div>
+        </div>
+      </div>
+      <div class="flow-vline"><span class="flow-label">OK</span></div>
+
+      <div class="flow-step">
+        <div class="flow-node flow-node--confirmed" data-node="ConfirmedFinal">MAINTENUE !</div>
+      </div>
+
     </div>
   </section>
 
@@ -120,27 +128,6 @@ flowchart TD
     </div>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
-  <script>
-    mermaid.initialize({
-      startOnLoad: false,
-      theme: "base",
-      themeVariables: {
-        fontFamily: '"Patrick Hand", cursive',
-        fontSize: "16px",
-        primaryColor: "#FFFDE7",
-        primaryBorderColor: "#2D3436",
-        lineColor: "#2D3436",
-        secondaryColor: "#FFFDE7",
-        tertiaryColor: "#FFFDE7",
-      },
-      flowchart: {
-        nodeSpacing: 30,
-        rankSpacing: 40,
-        useMaxWidth: false,
-      },
-    });
-  </script>
   <script src="app.js"></script>
 </body>
 
