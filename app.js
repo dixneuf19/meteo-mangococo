@@ -136,6 +136,35 @@ function getMaxPrecipProbOnSlots(slots) {
   return Math.max(...slots.map(s => s.precipProb));
 }
 
+function getAvgTempOnSlots(slots) {
+  if (slots.length === 0) return null;
+  return slots.reduce((sum, s) => sum + s.temp, 0) / slots.length;
+}
+
+const DRINK_THRESHOLD_TEMP = 15;
+
+function getTempEmoji(temp) {
+  if (temp >= 30) return "🔥";
+  if (temp >= 25) return "🌡️";
+  if (temp >= 20) return "☀️";
+  if (temp >= 15) return "🌤️";
+  if (temp >= 10) return "🌥️";
+  if (temp >= 5) return "🧣";
+  return "🥶";
+}
+
+const DRINK_CONFIG = {
+  sangria:    { css: "sangria",   mood: "Chaud",  moodEmoji: "🥵", drinkEmoji: "🍹", name: "SANGRIA",   outfitEmoji: "🩳" },
+  "vin-chaud": { css: "vin-chaud", mood: "Froid", moodEmoji: "🥶", drinkEmoji: "🍷", name: "VIN CHAUD", outfitEmoji: "🧥" },
+};
+
+function getDrinkRecommendation(slots) {
+  const avgTemp = getAvgTempOnSlots(slots);
+  if (avgTemp === null) return null;
+  const drink = avgTemp >= DRINK_THRESHOLD_TEMP ? "sangria" : "vin-chaud";
+  return { drink, avgTemp: Math.round(avgTemp * 10) / 10, ...DRINK_CONFIG[drink] };
+}
+
 
 // ---- Protocole de decision ----
 
@@ -236,11 +265,23 @@ function updateStatusBanner(result) {
   const icon = document.getElementById("status-icon");
   const text = document.getElementById("status-text");
   const detail = document.getElementById("status-detail");
+  const drinkEl = document.getElementById("status-drink");
 
   banner.className = "status-banner status-banner--" + result.status;
   icon.textContent = result.icon;
   text.textContent = result.text;
   detail.textContent = result.detail;
+
+  if (drinkEl) {
+    if (result.drink && result.status !== STATUS.ERROR && result.status !== STATUS.LOADING) {
+      drinkEl.style.display = "block";
+      const d = result.drink;
+      drinkEl.className = "status-banner__drink status-banner__drink--" + d.css;
+      drinkEl.innerHTML = `Il va faire <strong>${d.mood}</strong> ! (${d.avgTemp}°C) ${d.moodEmoji} → ${d.drinkEmoji} <strong>${d.name}</strong> ${d.outfitEmoji}`;
+    } else {
+      drinkEl.style.display = "none";
+    }
+  }
 }
 
 function updateWeatherGrid(slots) {
@@ -266,7 +307,7 @@ function updateWeatherGrid(slots) {
         <div class="weather-hour__bar ${barClass}" style="width: ${Math.max(prob, 2)}%"></div>
       </div>
       <span class="weather-hour__value">${prob}%</span>
-      <span class="weather-hour__temp">${Math.round(slot.temp)}°C</span>
+      <span class="weather-hour__temp">${getTempEmoji(slot.temp)} ${Math.round(slot.temp)}°C</span>
     `;
     grid.appendChild(el);
   });
@@ -290,16 +331,18 @@ const FLOW_PATHS = {
   "ConfirmedFinal": ["Start", "RainCheck", "Timeline", "Check70", "BeforeJ", "Check20", "ConfirmedFinal"],
 };
 
-function highlightFlowNode(activeNodeId) {
-  const nodeId = FLOW_NODE_MAP[activeNodeId];
-  if (!nodeId) return;
+function dimAllFlowchartNodes() {
+  document.querySelectorAll("#flowchart .flow-node, #drink-flowchart .flow-node").forEach(node => {
+    node.classList.remove("flow-node--active", "flow-node--on-path");
+    node.classList.add("flow-node--dimmed");
+  });
+}
 
-  const path = FLOW_PATHS[nodeId] || [];
-
-  document.querySelectorAll(".flow-node").forEach(node => {
+function applyFlowHighlight(containerSelector, activeId, path) {
+  document.querySelectorAll(containerSelector + " .flow-node").forEach(node => {
     const id = node.dataset.node;
     node.classList.remove("flow-node--active", "flow-node--dimmed", "flow-node--on-path");
-    if (id === nodeId) {
+    if (id === activeId) {
       node.classList.add("flow-node--active");
     } else if (path.includes(id)) {
       node.classList.add("flow-node--on-path");
@@ -307,6 +350,21 @@ function highlightFlowNode(activeNodeId) {
       node.classList.add("flow-node--dimmed");
     }
   });
+}
+
+function highlightFlowNode(activeNodeId) {
+  const nodeId = FLOW_NODE_MAP[activeNodeId];
+  if (!nodeId) {
+    dimAllFlowchartNodes();
+    return;
+  }
+  applyFlowHighlight("#flowchart", nodeId, FLOW_PATHS[nodeId] || []);
+}
+
+function highlightDrinkFlowchart(drinkResult) {
+  if (!drinkResult) return;
+  const activeDrink = drinkResult.drink === "sangria" ? "Sangria" : "VinChaud";
+  applyFlowHighlight("#drink-flowchart", activeDrink, ["DrinkStart", "TempCheck", activeDrink]);
 }
 
 function updateLastRefresh() {
@@ -368,19 +426,31 @@ async function loadWeatherAndDecide(eventDate) {
     detail: "Récupération des données météo en cours.",
   });
 
-  // Reset flowchart highlights
-  document.querySelectorAll(".flow-node").forEach(n => {
-    n.classList.remove("flow-node--active", "flow-node--dimmed", "flow-node--on-path");
-  });
+  dimAllFlowchartNodes();
 
   try {
     const data = await fetchWeather(eventDate);
     const slots = extractHourlySlots(data, CONFIG.EVENT_START_HOUR, CONFIG.EVENT_END_HOUR);
+
+    if (slots.length === 0) {
+      updateStatusBanner({
+        status: STATUS.ERROR,
+        icon: "🤷",
+        text: "PAS DE DONNÉES",
+        detail: "Aucune prévision disponible pour cette date. Essayez une date plus proche.",
+      });
+      updateWeatherGrid(slots);
+      updateLastRefresh();
+      return;
+    }
+
     const result = evaluateProtocol(eventDate, slots, data);
+    result.drink = getDrinkRecommendation(slots);
 
     updateStatusBanner(result);
     updateWeatherGrid(slots);
     highlightFlowNode(result.activeFlowNode);
+    highlightDrinkFlowchart(result.drink);
     updateLastRefresh();
   } catch (err) {
     console.error("Erreur météo:", err);

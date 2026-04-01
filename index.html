@@ -20,7 +20,7 @@
       <img src="mango.png" alt="Mango mascotte" class="header__mascot header__mascot--mango">
       <div class="header__text">
         <h1 class="header__title">MangoCoco</h1>
-        <p class="header__subtitle">Soirée Quai Fanfare Vin Chaud<br>sur les Quais Tino Rossi</p>
+        <p class="header__subtitle">Soirée Quai Fanfares<br>sur les Quais Tino Rossi</p>
       </div>
       <img src="coco.png" alt="Coco mascotte" class="header__mascot header__mascot--coco">
     </div>
@@ -41,6 +41,7 @@
     <div class="status-banner__icon" id="status-icon">⏳</div>
     <div class="status-banner__text" id="status-text">Chargement des données météo...</div>
     <div class="status-banner__detail" id="status-detail"></div>
+    <div class="status-banner__drink" id="status-drink" style="display:none;"></div>
   </section>
 
   <!-- Infos météo -->
@@ -51,6 +52,32 @@
       Données météo : <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo.com</a>
       — Lieu : Quais Tino Rossi, Paris 5e
     </p>
+  </section>
+
+  <!-- Diagramme boisson -->
+  <section class="drink-section">
+    <h2 class="section-title">Choix de la boisson</h2>
+    <div class="flowchart flowchart--drink" id="drink-flowchart">
+
+      <div class="flow-step">
+        <div class="flow-node flow-node--start" data-node="DrinkStart">Température moy.</div>
+      </div>
+      <div class="flow-vline"></div>
+
+      <div class="flow-step">
+        <div class="flow-node flow-node--decision" data-node="TempCheck">≥ 15°C ?</div>
+        <div class="flow-branch">
+          <div class="flow-arrow-h"><span class="flow-label">Oui</span></div>
+          <div class="flow-node flow-node--drink flow-node--drink-sangria" data-node="Sangria">🍹 Sangria</div>
+        </div>
+      </div>
+      <div class="flow-vline"><span class="flow-label">Non</span></div>
+
+      <div class="flow-step">
+        <div class="flow-node flow-node--drink flow-node--drink-vinchaud" data-node="VinChaud">🍷 Vin chaud</div>
+      </div>
+
+    </div>
   </section>
 
   <!-- Diagramme de décision -->
