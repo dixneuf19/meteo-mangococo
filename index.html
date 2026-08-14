@@ -4,27 +4,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MangoCoco - Soirée Quai</title>
+  <title>MangoCoco - La Valdingue</title>
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="icon"
-    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥥</text></svg>">
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐚</text></svg>">
 </head>
 
 <body>
 
   <!-- Header -->
   <header class="header">
+    <div class="header__sea" aria-hidden="true">
+      <span class="header__sea-item header__sea-item--1">🐠</span>
+      <span class="header__sea-item header__sea-item--2">🐚</span>
+      <span class="header__sea-item header__sea-item--3">🐟</span>
+      <span class="header__sea-item header__sea-item--4">🫧</span>
+    </div>
     <div class="header__mascots">
       <img src="mango.png" alt="Mango mascotte" class="header__mascot header__mascot--mango">
       <div class="header__text">
         <h1 class="header__title">MangoCoco</h1>
-        <p class="header__subtitle">Soirée Quai Fanfares<br>sur les Quais Tino Rossi</p>
+        <p class="header__subtitle header__subtitle--place">🌊 La Valdingue 🌊</p>
+        <p class="header__subtitle">Soirée Fanfares les pieds dans l'eau</p>
       </div>
       <img src="coco.png" alt="Coco mascotte" class="header__mascot header__mascot--coco">
     </div>
   </header>
+
+  <div class="wave-divider" aria-hidden="true"></div>
 
   <!-- Date de l'événement -->
   <section class="event-date" id="event-date-section">
@@ -46,17 +55,17 @@
 
   <!-- Infos météo -->
   <section class="weather-section" id="weather-section">
-    <h2 class="section-title">Prévisions pour le créneau 20h – 00h</h2>
+    <h2 class="section-title">🌊 Prévisions pour le créneau 20h – 00h</h2>
     <div class="weather-grid" id="weather-grid"></div>
     <p class="weather-source">
       Données météo : <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo.com</a>
-      — Lieu : Quais Tino Rossi, Paris 5e
+      — Lieu : La Valdingue 🐚 (Saint-Geoire-en-Valdaine, 38620)
     </p>
   </section>
 
   <!-- Diagramme boisson -->
   <section class="drink-section">
-    <h2 class="section-title">Choix de la boisson</h2>
+    <h2 class="section-title">🍹 Choix de la boisson</h2>
     <div class="flowchart flowchart--drink" id="drink-flowchart">
 
       <div class="flow-step">
@@ -82,7 +91,7 @@
 
   <!-- Diagramme de décision -->
   <section class="protocol-section">
-    <h2 class="section-title">Protocole de décision</h2>
+    <h2 class="section-title">🧭 Protocole de décision</h2>
     <div class="flowchart" id="flowchart">
 
       <div class="flow-step">
@@ -142,13 +151,18 @@
     </div>
   </section>
 
+  <!-- Fond marin décoratif -->
+  <div class="seabed" aria-hidden="true">
+    <span>🪸</span><span>🐚</span><span>🐠</span><span>⭐</span><span>🐙</span><span>🦀</span><span>🐟</span><span>🌿</span>
+  </div>
+
   <!-- Footer -->
   <footer class="footer">
     <div class="footer__content">
       <img src="mango.png" alt="" class="footer__mascot">
       <div>
         <p class="footer__title">MangoCoco</p>
-        <p class="footer__tagline">Fanfare tropicale et explosive</p>
+        <p class="footer__tagline">Fanfare tropicale et explosive 🌴</p>
         <p class="footer__refresh">Dernière mise à jour : <span id="last-refresh">—</span></p>
       </div>
       <img src="coco.png" alt="" class="footer__mascot">
