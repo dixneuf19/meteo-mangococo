@@ -1,31 +1,24 @@
 /* ============================================
    MangoCoco - Style crayon / cartoon
-   Theme "bord de mer" (coquillages & poissons)
-   avec les mascottes kawaii mango & coco
+   Effet "dessine a la main" pour coller
+   aux mascottes kawaii mango & coco
    ============================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
 
 :root {
-  --bg: #E4F6FA;
-  --bg-card: #F7FDFE;
-  --sand: #FBEFD2;
-  --sand-dark: #F3DFB0;
-  --text: #123A47;
-  --text-light: #5A7C86;
+  --bg: #FFF9E6;
+  --bg-card: #FFFEF6;
+  --text: #2D3436;
+  --text-light: #636E72;
   --mango: #F9A825;
   --mango-light: #FDD835;
   --coco-green: #66BB6A;
   --coco-green-dark: #388E3C;
-  --sea: #26A69A;
-  --sea-light: #80DEEA;
-  --sea-pale: #B2EBF2;
-  --sea-deep: #00838F;
-  --coral: #FF7043;
   --orange-warm: #FF9800;
   --red-cancel: #E53935;
   --green-ok: #4CAF50;
-  --outline: #123A47;
+  --outline: #2D3436;
 }
 
 * {
@@ -40,20 +33,8 @@ body {
   color: var(--text);
   line-height: 1.5;
   min-height: 100vh;
-  /* Vaguelettes dessinees + texture papier */
-  background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='70'%3E%3Cpath d='M0 45 Q15 33 30 45 T60 45 T90 45 T120 45' fill='none' stroke='%2326A69A' stroke-width='2' opacity='0.13'/%3E%3C/svg%3E"),
-    url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-}
-
-/* ---- Vague de separation ---- */
-
-.wave-divider {
-  height: 20px;
-  background-color: var(--sand);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='20'%3E%3Cpath d='M0 14 Q10 4 20 14 T40 14 T60 14 T80 14' fill='none' stroke='%23123A47' stroke-width='2.5'/%3E%3C/svg%3E");
-  background-repeat: repeat-x;
-  border-bottom: 3px solid var(--outline);
+  /* Subtle paper texture via CSS noise */
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
 }
 
 /* ---- Sketch-style utility ---- */
@@ -67,37 +48,12 @@ body {
 /* ---- Header ---- */
 
 .header {
-  background: linear-gradient(160deg, var(--sea-pale) 0%, var(--sea-light) 45%, var(--sea) 100%);
+  background: linear-gradient(160deg, var(--mango-light) 0%, var(--mango) 60%, var(--orange-warm) 100%);
   color: var(--text);
   text-align: center;
   padding: 1rem 1rem 1.2rem;
+  border-bottom: 3px solid var(--outline);
   position: relative;
-  overflow: hidden;
-}
-
-/* Petite faune marine flottante */
-
-.header__sea {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.header__sea-item {
-  position: absolute;
-  font-size: 1.6rem;
-  opacity: 0.6;
-  animation: float-sea 4s ease-in-out infinite alternate;
-}
-
-.header__sea-item--1 { top: 8px; left: 4%; animation-delay: 0s; }
-.header__sea-item--2 { bottom: 10px; left: 13%; animation-delay: 0.8s; }
-.header__sea-item--3 { top: 14px; right: 5%; animation-delay: 1.6s; }
-.header__sea-item--4 { bottom: 8px; right: 15%; animation-delay: 2.4s; }
-
-@keyframes float-sea {
-  from { transform: translateY(0) rotate(-6deg); }
-  to   { transform: translateY(-9px) rotate(6deg); }
 }
 
 .header__mascots {
@@ -107,7 +63,6 @@ body {
   gap: 0.5rem;
   max-width: 600px;
   margin: 0 auto;
-  position: relative;
 }
 
 .header__mascot {
@@ -148,13 +103,6 @@ body {
   color: var(--outline);
   opacity: 0.75;
   line-height: 1.25;
-}
-
-.header__subtitle--place {
-  font-size: 1.4rem;
-  opacity: 1;
-  letter-spacing: 0.02em;
-  text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.45);
 }
 
 /* ---- Event Date ---- */
@@ -222,7 +170,7 @@ body {
 }
 
 .status-banner--loading {
-  background: var(--sea-pale);
+  background: #FFF9C4;
 }
 
 .status-banner--confirmed {
@@ -239,16 +187,6 @@ body {
 
 .status-banner--error {
   background: #CFD8DC;
-}
-
-/* Ecume au bas du bandeau */
-.status-banner::after {
-  content: "🌊 🐚 🐠 🐚 🌊";
-  display: block;
-  margin-top: 0.6rem;
-  font-size: 0.9rem;
-  opacity: 0.45;
-  letter-spacing: 0.15em;
 }
 
 .status-banner__icon {
@@ -331,7 +269,7 @@ body {
 .weather-hour__bar-container {
   flex: 1;
   height: 18px;
-  background: var(--sand);
+  background: #FFF9C4;
   border-radius: 9px;
   overflow: hidden;
   border: 2px solid var(--outline);
@@ -345,7 +283,7 @@ body {
 }
 
 .weather-hour__bar--low {
-  background: var(--sea);
+  background: var(--coco-green);
 }
 
 .weather-hour__bar--medium {
@@ -377,7 +315,7 @@ body {
 }
 
 .weather-source a {
-  color: var(--sea-deep);
+  color: var(--orange-warm);
 }
 
 /* ---- Drink Section ---- */
@@ -451,13 +389,13 @@ body {
 }
 
 .flow-node--start {
-  background: var(--sea-pale);
-  border-color: var(--sea-deep);
+  background: #FFF9C4;
+  border-color: var(--mango);
 }
 
 .flow-node--decision {
-  background: #EEFBFD;
-  border-color: var(--sea);
+  background: #FFFDE7;
+  border-color: var(--mango);
   border-style: dashed;
 }
 
@@ -492,7 +430,7 @@ body {
 
 .flow-node--active {
   opacity: 1;
-  box-shadow: 0 0 0 4px rgba(38, 166, 154, 0.55), 2px 2px 0 var(--outline);
+  box-shadow: 0 0 0 4px rgba(255, 140, 66, 0.55), 2px 2px 0 var(--outline);
 }
 
 /* ---- Steps (decision row + optional exit) ---- */
@@ -575,44 +513,12 @@ body {
   white-space: nowrap;
 }
 
-/* ---- Fond marin ---- */
-
-.seabed {
-  display: flex;
-  justify-content: space-around;
-  align-items: flex-end;
-  padding: 0.5rem 0.5rem 0.2rem;
-  background: linear-gradient(180deg, transparent, var(--sand));
-  font-size: 1.5rem;
-  line-height: 1;
-  user-select: none;
-}
-
-.seabed span {
-  opacity: 0.75;
-  animation: sway-sea 5s ease-in-out infinite alternate;
-}
-
-.seabed span:nth-child(even) {
-  font-size: 1.2rem;
-  animation-delay: 1.2s;
-}
-
-.seabed span:nth-child(3n) {
-  animation-delay: 2.4s;
-}
-
-@keyframes sway-sea {
-  from { transform: rotate(-8deg) translateY(0); }
-  to   { transform: rotate(8deg) translateY(-4px); }
-}
-
 /* ---- Footer ---- */
 
 .footer {
   text-align: center;
   padding: 1rem;
-  background: linear-gradient(160deg, var(--sea-pale), var(--sea-light) 55%, var(--sea));
+  background: linear-gradient(160deg, var(--mango-light), var(--mango), var(--orange-warm));
   border-top: 3px solid var(--outline);
   color: var(--text);
 }
@@ -647,42 +553,11 @@ body {
   opacity: 0.5;
 }
 
-/* ---- Accessibilite ---- */
-
-@media (prefers-reduced-motion: reduce) {
-  .header__sea-item,
-  .seabed span {
-    animation: none;
-  }
-}
-
 /* ---- Responsive ---- */
 
 @media (max-width: 500px) {
   .header__title {
     font-size: 2rem;
-  }
-
-  .header__subtitle--place {
-    font-size: 1.15rem;
-  }
-
-  /* Trop etroit : on garde deux poissons, pas l'aquarium entier */
-  .header__sea-item--2,
-  .header__sea-item--4 {
-    display: none;
-  }
-
-  .header__sea-item {
-    font-size: 1.2rem;
-  }
-
-  .seabed {
-    font-size: 1.2rem;
-  }
-
-  .seabed span:nth-child(even) {
-    font-size: 1rem;
   }
 
   .header__mascot {
