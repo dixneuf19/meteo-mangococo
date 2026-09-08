@@ -6,11 +6,11 @@
 // ---- Configuration ----
 const CONFIG = {
   // Date de la prochaine soiree (format YYYY-MM-DD). Mettre null pour auto (prochain jeudi).
-  EVENT_DATE: "2026-08-22",
+  EVENT_DATE: null,
 
-  // Coordonnees : Saint-Geoire-en-Valdaine (38620), Isere
-  LAT: 45.45668,
-  LON: 5.63515,
+  // Coordonnees : Quais Tino Rossi, Paris 5e
+  LAT: 48.849,
+  LON: 2.354,
 
   // Creneaux de la soiree (heures)
   EVENT_START_HOUR: 20,
@@ -289,7 +289,7 @@ function updateWeatherGrid(slots) {
   grid.innerHTML = "";
 
   if (slots.length === 0) {
-    grid.innerHTML = '<p style="text-align:center;color:var(--text-light);">🐙 Pas de données disponibles pour ce créneau.</p>';
+    grid.innerHTML = '<p style="text-align:center;color:var(--text-light);">Pas de données disponibles pour ce créneau.</p>';
     return;
   }
 
@@ -435,7 +435,7 @@ async function loadWeatherAndDecide(eventDate) {
     if (slots.length === 0) {
       updateStatusBanner({
         status: STATUS.ERROR,
-        icon: "🐙",
+        icon: "🤷",
         text: "PAS DE DONNÉES",
         detail: "Aucune prévision disponible pour cette date. Essayez une date plus proche.",
       });
