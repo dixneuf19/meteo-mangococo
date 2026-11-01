@@ -484,6 +484,15 @@ body {
   opacity: 0.25;
 }
 
+/* Le fond du libelle masque la fleche : on ne grise que le texte, pas le fond */
+.diagram .pele-edge-label.is-dimmed {
+  opacity: 1;
+}
+
+.diagram .pele-edge-label.is-dimmed text {
+  opacity: 0.25;
+}
+
 .diagram .pele-edge.is-on-path {
   stroke: var(--orange-warm);
 }
