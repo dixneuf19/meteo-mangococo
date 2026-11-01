@@ -163,7 +163,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
+  gap: 1.5rem;
   padding: 1rem;
   margin: 1rem;
   background: var(--bg-card);
@@ -189,7 +189,7 @@ body {
 
 .special-event__poster {
   display: block;
-  width: 120px;
+  width: 240px;
   height: auto;
   border: 2px solid var(--outline);
   border-radius: 6px 4px 7px 3px;
@@ -204,14 +204,14 @@ body {
 }
 
 .special-event__title {
-  font-size: 2rem;
+  font-size: 2.4rem;
   color: var(--orange-warm);
   line-height: 1.1;
   margin-bottom: 0.3rem;
 }
 
 .special-event__line {
-  font-size: 1.05rem;
+  font-size: 1.15rem;
 }
 
 @media (max-width: 500px) {
@@ -223,7 +223,7 @@ body {
   }
 
   .special-event__poster {
-    width: 80px;
+    width: 140px;
   }
 
   .special-event__title {
