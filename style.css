@@ -157,6 +157,102 @@ body {
   color: var(--text);
 }
 
+/* ---- Special Event (Catching Fire) ---- */
+
+.special-event {
+  text-align: center;
+  padding: 1.2rem 1rem;
+  margin: 1rem auto;
+  max-width: 600px;
+  color: #FFF8E1;
+  background: linear-gradient(170deg, #1B4F5C 0%, #24414D 45%, #E65100 85%, #FF9800 100%);
+  border: 3px solid var(--outline);
+  border-radius: 12px 14px 8px 12px;
+  box-shadow: 5px 5px 0 var(--outline);
+}
+
+.special-event[hidden] {
+  display: none;
+}
+
+.special-event__kicker {
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.85;
+}
+
+.special-event__title {
+  font-size: 2.3rem;
+  font-weight: 400;
+  color: #FF9800;
+  text-shadow: 2px 2px 0 #3E1A00;
+  line-height: 1.1;
+  margin: 0.15rem 0 0.4rem;
+  animation: flicker 2.4s ease-in-out infinite;
+}
+
+@keyframes flicker {
+  0%, 100% { text-shadow: 2px 2px 0 #3E1A00, 0 0 6px #FF6D00; }
+  50% { text-shadow: 2px 2px 0 #3E1A00, 0 0 14px #FFAB00; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .special-event__title { animation: none; }
+}
+
+.special-event__intro {
+  font-size: 1.05rem;
+  margin-bottom: 0.8rem;
+}
+
+.special-event__program {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: left;
+}
+
+.special-event__step {
+  display: flex;
+  gap: 0.6rem;
+  align-items: baseline;
+  background: rgba(255, 248, 225, 0.95);
+  color: var(--text);
+  padding: 0.45rem 0.7rem;
+  border: 2px solid var(--outline);
+  border-radius: 10px 6px 8px 5px;
+  box-shadow: 3px 3px 0 var(--outline);
+}
+
+.special-event__when {
+  flex-shrink: 0;
+  min-width: 6.5rem;
+  color: #E65100;
+}
+
+.special-event__footnote {
+  margin-top: 0.8rem;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 500px) {
+  .special-event {
+    margin: 0.75rem 0.5rem;
+    box-shadow: 3px 3px 0 var(--outline);
+  }
+
+  .special-event__title {
+    font-size: 1.8rem;
+  }
+
+  .special-event__step {
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+}
+
 /* ---- Status Banner ---- */
 
 .status-banner {
