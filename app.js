@@ -331,24 +331,61 @@ const FLOW_PATHS = {
   "ConfirmedFinal": ["Start", "RainCheck", "Timeline", "Check70", "BeforeJ", "Check20", "ConfirmedFinal"],
 };
 
+// ---- Diagrammes Mermaid (rendus en SVG par Pele, https://pele.run) ----
+
+const DIAGRAM_FONT = '"Patrick Hand", "Comic Sans MS", cursive';
+
+async function renderDiagrams() {
+  // Pele mesure le texte pour la mise en page : attendre la police manuscrite
+  try { await document.fonts.ready; } catch (_) { /* pas bloquant */ }
+
+  document.querySelectorAll(".diagram[data-src]").forEach(container => {
+    const source = document.getElementById(container.dataset.src).textContent;
+    try {
+      if (!window.pele) throw new Error("Pele non chargé");
+      container.innerHTML = window.pele.render(source, { fontFamily: DIAGRAM_FONT }).svg;
+    } catch (err) {
+      console.error("Erreur diagramme:", err);
+      const pre = document.createElement("pre");
+      pre.className = "diagram__fallback";
+      pre.textContent = source.trim();
+      container.replaceChildren(pre);
+    }
+  });
+}
+
+// Les aretes Pele ont un data-id de la forme "L_<depart>_<arrivee>_<n>"
+function edgeEnds(el) {
+  const parts = el.dataset.id.split("_");
+  return [parts[1], parts[2]];
+}
+
+function isEdgeOnPath(el, path) {
+  const [from, to] = edgeEnds(el);
+  const i = path.indexOf(from);
+  return i !== -1 && path[i + 1] === to;
+}
+
+const HIGHLIGHT_CLASSES = ["is-active", "is-on-path", "is-dimmed"];
+
 function dimAllFlowchartNodes() {
-  document.querySelectorAll("#flowchart .flow-node, #drink-flowchart .flow-node").forEach(node => {
-    node.classList.remove("flow-node--active", "flow-node--on-path");
-    node.classList.add("flow-node--dimmed");
+  document.querySelectorAll(".diagram .pele-node, .diagram .pele-edge, .diagram .pele-edge-label").forEach(el => {
+    el.classList.remove(...HIGHLIGHT_CLASSES);
+    el.classList.add("is-dimmed");
   });
 }
 
 function applyFlowHighlight(containerSelector, activeId, path) {
-  document.querySelectorAll(containerSelector + " .flow-node").forEach(node => {
-    const id = node.dataset.node;
-    node.classList.remove("flow-node--active", "flow-node--dimmed", "flow-node--on-path");
-    if (id === activeId) {
-      node.classList.add("flow-node--active");
-    } else if (path.includes(id)) {
-      node.classList.add("flow-node--on-path");
-    } else {
-      node.classList.add("flow-node--dimmed");
-    }
+  document.querySelectorAll(containerSelector + " .pele-node").forEach(node => {
+    const id = node.dataset.id;
+    node.classList.remove(...HIGHLIGHT_CLASSES);
+    if (id === activeId) node.classList.add("is-active");
+    else if (path.includes(id)) node.classList.add("is-on-path");
+    else node.classList.add("is-dimmed");
+  });
+  document.querySelectorAll(containerSelector + " .pele-edge, " + containerSelector + " .pele-edge-label").forEach(edge => {
+    edge.classList.remove(...HIGHLIGHT_CLASSES);
+    edge.classList.add(isEdgeOnPath(edge, path) ? "is-on-path" : "is-dimmed");
   });
 }
 
@@ -415,6 +452,7 @@ function setupDateUI(eventDate) {
 // ---- Main ----
 
 let currentEventDate = null;
+let diagramsReady = Promise.resolve();
 
 function updateSpecialEvent(eventDate) {
   const el = document.getElementById("special-event");
@@ -455,6 +493,7 @@ async function loadWeatherAndDecide(eventDate) {
 
     updateStatusBanner(result);
     updateWeatherGrid(slots);
+    await diagramsReady;
     highlightFlowNode(result.activeFlowNode);
     highlightDrinkFlowchart(result.drink);
     updateLastRefresh();
@@ -473,6 +512,7 @@ async function init() {
   const eventDate = getEventDate();
   setDateInURL(eventDate);
   setupDateUI(eventDate);
+  diagramsReady = renderDiagrams();
   loadWeatherAndDecide(eventDate);
 
   // Auto-refresh with whichever date is currently selected
