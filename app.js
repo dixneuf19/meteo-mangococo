@@ -6,7 +6,7 @@
 // ---- Configuration ----
 const CONFIG = {
   // Date de la prochaine soiree (format YYYY-MM-DD). Mettre null pour auto (prochain jeudi).
-  EVENT_DATE: null,
+  EVENT_DATE: "2026-11-05", // Catching Fire, jour de greve generale
 
   // Coordonnees : Quais Tino Rossi, Paris 5e
   LAT: 48.849,
@@ -416,8 +416,14 @@ function setupDateUI(eventDate) {
 
 let currentEventDate = null;
 
+function updateSpecialEvent(eventDate) {
+  const el = document.getElementById("special-event");
+  if (el) el.hidden = el.dataset.date !== toDateString(eventDate);
+}
+
 async function loadWeatherAndDecide(eventDate) {
   currentEventDate = eventDate;
+  updateSpecialEvent(eventDate);
 
   updateStatusBanner({
     status: STATUS.LOADING,

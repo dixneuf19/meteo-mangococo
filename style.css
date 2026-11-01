@@ -157,6 +157,97 @@ body {
   color: var(--text);
 }
 
+/* ---- Special Event (Catching Fire) ---- */
+
+.special-event {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 1rem;
+  margin: 1rem;
+  background: var(--bg-card);
+  border: 3px solid var(--outline);
+  border-radius: 12px 14px 8px 12px;
+  box-shadow: 5px 5px 0 var(--outline);
+}
+
+.special-event[hidden] {
+  display: none;
+}
+
+.special-event__poster-link {
+  flex-shrink: 0;
+  display: block;
+  transform: rotate(-3deg);
+  transition: transform 0.3s;
+}
+
+.special-event__poster-link:hover {
+  transform: scale(1.05) rotate(0deg);
+}
+
+.special-event__poster {
+  display: block;
+  width: 240px;
+  height: auto;
+  border: 2px solid var(--outline);
+  border-radius: 6px 4px 7px 3px;
+  box-shadow: 3px 3px 0 var(--outline);
+}
+
+.special-event__kicker {
+  font-size: 0.95rem;
+  color: var(--red-cancel);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.special-event__title {
+  font-size: 2.4rem;
+  color: var(--orange-warm);
+  line-height: 1.1;
+  margin-bottom: 0.3rem;
+}
+
+.special-event__quote {
+  font-size: 1.15rem;
+  font-style: italic;
+  color: var(--text-light);
+  margin-bottom: 0.4rem;
+}
+
+.special-event__line {
+  font-size: 1.15rem;
+}
+
+@media (max-width: 500px) {
+  .special-event {
+    margin: 0.75rem 0.5rem;
+    padding: 0.75rem;
+    gap: 0.75rem;
+    box-shadow: 3px 3px 0 var(--outline);
+  }
+
+  .special-event__poster {
+    width: 140px;
+  }
+
+  .special-event__title {
+    font-size: 1.5rem;
+  }
+
+  .special-event__quote {
+    font-size: 0.95rem;
+    line-height: 1.3;
+  }
+
+  .special-event__line {
+    font-size: 0.95rem;
+    line-height: 1.3;
+  }
+}
+
 /* ---- Status Banner ---- */
 
 .status-banner {
