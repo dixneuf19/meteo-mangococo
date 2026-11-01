@@ -210,6 +210,13 @@ body {
   margin-bottom: 0.3rem;
 }
 
+.special-event__quote {
+  font-size: 1.15rem;
+  font-style: italic;
+  color: var(--text-light);
+  margin-bottom: 0.4rem;
+}
+
 .special-event__line {
   font-size: 1.15rem;
 }
@@ -228,6 +235,11 @@ body {
 
   .special-event__title {
     font-size: 1.5rem;
+  }
+
+  .special-event__quote {
+    font-size: 0.95rem;
+    line-height: 1.3;
   }
 
   .special-event__line {
