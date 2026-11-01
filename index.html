@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MangoCoco - Soirée Quai</title>
-  <link rel="stylesheet" href="style.css?v=2026-11-05">
+  <link rel="stylesheet" href="style.css?v=2026-11-05b">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="icon"
@@ -73,89 +73,57 @@
   <!-- Diagramme boisson -->
   <section class="drink-section">
     <h2 class="section-title">Choix de la boisson</h2>
-    <div class="flowchart flowchart--drink" id="drink-flowchart">
-
-      <div class="flow-step">
-        <div class="flow-node flow-node--start" data-node="DrinkStart">Température moy.</div>
-      </div>
-      <div class="flow-vline"></div>
-
-      <div class="flow-step">
-        <div class="flow-node flow-node--decision" data-node="TempCheck">≥ 15°C ?</div>
-        <div class="flow-branch">
-          <div class="flow-arrow-h"><span class="flow-label">Oui</span></div>
-          <div class="flow-node flow-node--drink flow-node--drink-sangria" data-node="Sangria">🍹 Sangria</div>
-        </div>
-      </div>
-      <div class="flow-vline"><span class="flow-label">Non</span></div>
-
-      <div class="flow-step">
-        <div class="flow-node flow-node--drink flow-node--drink-vinchaud" data-node="VinChaud">🍷 Vin chaud</div>
-      </div>
-
-    </div>
+    <div class="diagram diagram--drink" id="drink-flowchart" data-src="drink-src"></div>
+    <!-- Source Mermaid du diagramme, rendu en SVG par Pele (https://pele.run) -->
+    <script type="text/x-mermaid" id="drink-src">
+flowchart TD
+  DrinkStart([Température moy.]) --> TempCheck{≥ 15°C ?}
+  TempCheck -- Oui --> Sangria[🍹 Sangria]:::sangria
+  TempCheck -- Non --> VinChaud[🍷 Vin chaud]:::vinchaud
+  classDef sangria fill:#F3E5F5,stroke:#7B1FA2,color:#4A148C
+  classDef vinchaud fill:#FBE9E7,stroke:#BF360C,color:#BF360C
+    </script>
   </section>
 
   <!-- Diagramme de décision -->
   <section class="protocol-section">
     <h2 class="section-title">Protocole de décision</h2>
-    <div class="flowchart" id="flowchart">
-
-      <div class="flow-step">
-        <div class="flow-node flow-node--start" data-node="Start">Prévisions soirée</div>
-      </div>
-      <div class="flow-vline"></div>
-
-      <div class="flow-step">
-        <div class="flow-node flow-node--decision" data-node="RainCheck">Pluie annoncée ?</div>
-        <div class="flow-branch">
-          <div class="flow-arrow-h"><span class="flow-label">Beau temps</span></div>
-          <div class="flow-node flow-node--confirmed" data-node="ConfirmedDirect">MAINTENUE !</div>
-        </div>
-      </div>
-      <div class="flow-vline"><span class="flow-label">Risque pluie</span></div>
-
-      <div class="flow-step">
-        <div class="flow-node flow-node--decision" data-node="Timeline">Avant veille 20h ?</div>
-        <div class="flow-branch">
-          <div class="flow-arrow-h"><span class="flow-label">Oui</span></div>
-          <div class="flow-node flow-node--waiting" data-node="Wait1">EN ATTENTE<br>Veille 20h</div>
-        </div>
-      </div>
-      <div class="flow-vline"><span class="flow-label">Non</span></div>
-
-      <div class="flow-step">
-        <div class="flow-node flow-node--decision" data-node="Check70">Précip. journée<br>&gt; 70% ?</div>
-        <div class="flow-branch">
-          <div class="flow-arrow-h"><span class="flow-label">&gt; 70%</span></div>
-          <div class="flow-node flow-node--cancelled" data-node="Cancel1">ANNULÉE</div>
-        </div>
-      </div>
-      <div class="flow-vline"><span class="flow-label">OK</span></div>
-
-      <div class="flow-step">
-        <div class="flow-node flow-node--decision" data-node="BeforeJ">Avant J 17h ?</div>
-        <div class="flow-branch">
-          <div class="flow-arrow-h"><span class="flow-label">Oui</span></div>
-          <div class="flow-node flow-node--waiting" data-node="Wait2">EN ATTENTE<br>Jour J 17h</div>
-        </div>
-      </div>
-      <div class="flow-vline"><span class="flow-label">Non</span></div>
-
-      <div class="flow-step">
-        <div class="flow-node flow-node--decision" data-node="Check20">Précip. 20h-00h<br>&gt; 20% ?</div>
-        <div class="flow-branch">
-          <div class="flow-arrow-h"><span class="flow-label">&gt; 20%</span></div>
-          <div class="flow-node flow-node--cancelled" data-node="Cancel2">ANNULÉE</div>
-        </div>
-      </div>
-      <div class="flow-vline"><span class="flow-label">OK</span></div>
-
-      <div class="flow-step">
-        <div class="flow-node flow-node--confirmed" data-node="ConfirmedFinal">MAINTENUE !</div>
-      </div>
-
-    </div>
+    <div class="diagram" id="flowchart" data-src="protocol-src"></div>
+    <!-- Source Mermaid du diagramme, rendu en SVG par Pele (https://pele.run).
+         Les ids des noeuds (Start, RainCheck...) sont utilisés par app.js pour surligner le chemin actif. -->
+    <script type="text/x-mermaid" id="protocol-src">
+flowchart TD
+  %% Une ligne (subgraph LR) par décision : la question à gauche, la sortie à droite
+  Start([Prévisions soirée]) --> RainCheck
+  subgraph S1 [" "]
+    direction LR
+    RainCheck{Pluie annoncée ?} -- Beau temps --> ConfirmedDirect[MAINTENUE !]:::confirmed
+  end
+  subgraph S2 [" "]
+    direction LR
+    Timeline{Avant veille 20h ?} -- Oui --> Wait1[EN ATTENTE<br>Veille 20h]:::waiting
+  end
+  subgraph S3 [" "]
+    direction LR
+    Check70{"Précip. journée<br>> 70% ?"} -- "> 70%" --> Cancel1[ANNULÉE]:::cancelled
+  end
+  subgraph S4 [" "]
+    direction LR
+    BeforeJ{Avant J 17h ?} -- Oui --> Wait2[EN ATTENTE<br>Jour J 17h]:::waiting
+  end
+  subgraph S5 [" "]
+    direction LR
+    Check20{"Précip. 20h-00h<br>> 20% ?"} -- "> 20%" --> Cancel2[ANNULÉE]:::cancelled
+  end
+  RainCheck -- Risque pluie --> Timeline
+  Timeline -- Non --> Check70
+  Check70 -- OK --> BeforeJ
+  BeforeJ -- Non --> Check20
+  Check20 -- OK --> ConfirmedFinal[MAINTENUE !]:::confirmed
+  classDef confirmed fill:#4CAF50,stroke:#2E7D32,color:#fff
+  classDef cancelled fill:#E53935,stroke:#B71C1C,color:#fff
+  classDef waiting fill:#FF9800,stroke:#E65100,color:#fff
+    </script>
   </section>
 
   <!-- Footer -->
@@ -171,7 +139,10 @@
     </div>
   </footer>
 
-  <script src="app.js?v=2026-11-05"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pele@1.5.2/dist/pele.global.js"
+    integrity="sha384-/Sx0ye42QCjTCAYgXAi3brT22Q08i5jdKIh+IvNApsxQKffbSQOgSOOViHIraVdA"
+    crossorigin="anonymous"></script>
+  <script src="app.js?v=2026-11-05b"></script>
 </body>
 
 </html>
